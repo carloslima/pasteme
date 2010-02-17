@@ -1,5 +1,13 @@
 # Settings specified here will take precedence over those in config/environment.rb
 
+config.gem "rspec", :lib => false, :version => ">= 1.3.0"
+config.gem "rspec-rails", :lib => false, :version => ">= 1.3.2"
+config.gem "webrat", :lib => false, :version => ">= 0.6.0"
+config.gem "cucumber", :lib => false, :version => ">= 0.6.2"
+config.gem "cucumber-rails", :lib => false, :version => ">= 0.2.4"
+config.gem "pickle", :lib => false, :version => ">= 0.2.1"
+config.gem "factory_girl", :version => ">= 1.2.3"
+
 # The test environment is used exclusively to run your application's
 # test suite.  You never need to work with it otherwise.  Remember that
 # your test database is "scratch space" for the test suite and is wiped
