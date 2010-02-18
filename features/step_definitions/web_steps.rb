@@ -219,7 +219,8 @@ end
 
 Then /^the "([^\"]*)" field should contain "([^\"]*)"$/ do |field, value|
   if defined?(Spec::Rails::Matchers)
-    field_labeled(field).value.should =~ /#{value}/
+#    field_labeled(field).value.should =~ /#{value}/
+    field_labeled(field).value.should contain(value)
   else
     assert_match(/#{value}/, field_labeled(field).value)
   end
