@@ -9,3 +9,7 @@ end
 When /^I fill in "([^\"]*)" with:$/ do |name, value|
   When %{I fill in "#{name}" with "#{value}"}
 end
+
+Then /^I should see:$/ do |text|
+  Then %{I should see "#{text}"}
+end

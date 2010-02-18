@@ -10,6 +10,10 @@ module NavigationHelpers
     
     when /the home\s?page/
       '/'
+
+    when /newly created #{capture_model}(?:'s)? page/
+      model_name = $1.split.map{|i| i.capitalize}.join
+      polymorphic_path( model_name.constantize.last )
     
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
