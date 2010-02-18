@@ -8,9 +8,9 @@ describe SnippetsController do
 
   describe "GET index" do
     it "assigns all snippets as @snippets" do
-      Snippet.stub(:find).with(:all).and_return([mock_snippet])
+      snippet = Factory(:snippet)
       get :index
-      assigns[:snippets].should == [mock_snippet]
+      assigns[:snippets].should == [snippet]
     end
   end
 

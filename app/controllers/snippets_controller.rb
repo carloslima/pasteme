@@ -2,7 +2,7 @@ class SnippetsController < ApplicationController
   # GET /snippets
   # GET /snippets.xml
   def index
-    @snippets = Snippet.all
+    @snippets = Snippet.paginate :per_page => 10, :page => params[:page], :order=> 'updated_at DESC'
 
     respond_to do |format|
       format.html # index.html.erb
