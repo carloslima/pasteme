@@ -13,3 +13,7 @@ end
 Then /^I should see:$/ do |text|
   Then %{I should see "#{text}"}
 end
+
+Given /^#{capture_model} exists with "([^\"]*)":$/ do |model_name, field_name, field_value|
+  create_model(model_name, {field_name => field_value})
+end
