@@ -8,17 +8,17 @@ describe SnippetsController do
 
   describe "GET index" do
     it "assigns all snippets as @snippets" do
-      snippet = Factory(:snippet)
+      snippets = [Factory(:snippet),Factory(:snippet)]
       get :index
-      assigns[:snippets].should == [snippet]
+      assigns[:snippets].should == snippets
     end
   end
 
   describe "GET show" do
     it "assigns the requested snippet as @snippet" do
-      Snippet.stub(:find).with("37").and_return(mock_snippet)
+      snippet = Factory(:snippet, :id=>37)
       get :show, :id => "37"
-      assigns[:snippet].should equal(mock_snippet)
+      assigns[:snippet].should == snippet
     end
   end
 
@@ -32,9 +32,9 @@ describe SnippetsController do
 
   describe "GET edit" do
     it "assigns the requested snippet as @snippet" do
-      Snippet.stub(:find).with("37").and_return(mock_snippet)
+      snippet = Factory(:snippet, :id=>37)
       get :edit, :id => "37"
-      assigns[:snippet].should equal(mock_snippet)
+      assigns[:snippet].should == snippet
     end
   end
 
@@ -48,9 +48,10 @@ describe SnippetsController do
       end
 
       it "redirects to the created snippet" do
-        Snippet.stub(:new).and_return(mock_snippet(:save => true))
+        snippet = Factory.build(:snippet)
+        Snippet.should_receive(:new).and_return(snippet)
         post :create, :snippet => {}
-        response.should redirect_to(snippet_url(mock_snippet))
+        response.should redirect_to(snippet_url(snippet))
       end
     end
 
@@ -80,15 +81,15 @@ describe SnippetsController do
       end
 
       it "assigns the requested snippet as @snippet" do
-        Snippet.stub(:find).and_return(mock_snippet(:update_attributes => true))
+        snippet = Factory(:snippet, :id=>1)
         put :update, :id => "1"
-        assigns[:snippet].should equal(mock_snippet)
+        assigns[:snippet].should == snippet
       end
 
       it "redirects to the snippet" do
-        Snippet.stub(:find).and_return(mock_snippet(:update_attributes => true))
+        snippet = Factory(:snippet, :id=>1)
         put :update, :id => "1"
-        response.should redirect_to(snippet_url(mock_snippet))
+        response.should redirect_to(snippet_url(snippet))
       end
     end
 
@@ -122,7 +123,7 @@ describe SnippetsController do
     end
 
     it "redirects to the snippets list" do
-      Snippet.stub(:find).and_return(mock_snippet(:destroy => true))
+      Factory(:snippet, :id=>1)
       delete :destroy, :id => "1"
       response.should redirect_to(snippets_url)
     end
