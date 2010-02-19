@@ -1,0 +1,23 @@
+:erb
+  <h1>Listing snippets</h1>
+
+  <table>
+    <tr>
+      <th>Code</th>
+      <th>Language</th>
+    </tr>
+
+  <% @snippets.each do |snippet| %>
+    <tr>
+      <td><%=h snippet.code %></td>
+      <td><%=h snippet.language %></td>
+      <td><%= link_to 'Show', snippet %></td>
+      <td><%= link_to 'Edit', edit_snippet_path(snippet) %></td>
+      <td><%= link_to 'Destroy', snippet, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'New snippet', new_snippet_path %>
