@@ -1,15 +1,12 @@
-%p
-  %b< Code:
-  %table
-    %tr
-      %td
-        %pre.slush_poppies
-          %span.line-numbers>~ Range.new(1,@snippet.code.to_a.size).map{|line_number| line_number.to_s.rjust(4)+"&#x000A;"}
-      %td~ Uv.parse(@snippet.code, 'xhtml', @snippet.language.parser, false, 'slush_poppies')
+.span-1
+  %pre.slush_poppies
+    %span.line-numbers>~ @snippet.formatted_line_numbering
+.span-23.last
+  ~ @snippet.formatted_code
 %p
   %b Language:
   =h @snippet.language.name
 
 = link_to 'Edit', edit_snippet_path(@snippet)
 |
-= link_to 'Back', snippets_path
+= link_to 'Destroy', @snippet, :confirm => 'Are you sure?', :method => :delete

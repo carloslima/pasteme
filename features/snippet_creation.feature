@@ -14,8 +14,8 @@ Feature: developer creates snippet
     Given a language exists with name: "Ruby"
     And a language exists with name: "Python"
     When I go to the new snippet page
-    And I select "Ruby" from "Language"
-    And I fill in "Code" with:
+    And I select "Ruby" from "snippet_language_id"
+    And I fill in "snippet_code" with:
     """
     <%
       def format_name name

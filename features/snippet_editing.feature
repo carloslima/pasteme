@@ -8,12 +8,12 @@ Feature: developer edits snippet
     When I go to that snippet page
     And I follow "Edit"
     Then I should be on the snippet's edit page
-    And the "code" field should contain "<?php die('OMG, they killed Kenny!'); ?>"
+    And I should see "<?php die('OMG, they killed Kenny!'); ?>"
 
   Scenario: Update Snippet
     Given a snippet exists with code: "<?php die('OMG, they killed Kenny!'); ?>"
     When I go to the snippet's edit page
-    And I fill in "Code" with "<?php echo 'Screw you guys ...I'm going home!'; die; ?>"
+    And I fill in "snippet_code" with "<?php echo 'Screw you guys ...I'm going home!'; die; ?>"
     And I press "Update Snippet"
     Then I should see "Snippet was successfully updated."
     And I should see "<?php echo 'Screw you guys ...I'm going home!'; die; ?>"

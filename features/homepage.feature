@@ -5,15 +5,15 @@ Feature: Homepage
 
   Scenario: Visiting the homepage
     When I go to the homepage
-    Then I should see a "code" field
-    And I should see a "language" field
+    Then I should see a "snippet_code" field
+    And I should see a "snippet_language_id" field
     And I should see a "Create Snippet" button
 
   Scenario: Create snippet
     Given a language exists with name: "Ruby"
     When I go to the home page
-    And I select "Ruby" from "Language"
-    And I fill in "code" with "<%= [1,3,5].map{|i| i+1}.to_s %>"
+    And I select "Ruby" from "snippet_language_id"
+    And I fill in "snippet_code" with "<%= [1,3,5].map{|i| i+1}.to_s %>"
     And I press "Create"
     Then a snippet should exist with code: "<%= [1,3,5].map{|i| i+1}.to_s %>"
     And I should be on that snippet page

@@ -1,0 +1,67 @@
+#navigation {
+    background: #333;
+}
+
+#navigation ul {
+    margin: 0;
+    padding: 0;
+}
+
+#navigation ul li {
+    list-style-type: none;
+    display: inline;
+}
+
+#navigation li a {
+    display: block;
+    float: left;
+    padding: 7px 10px;
+    color: #fff;
+    text-decoration: none;
+    border-right: 1px solid #fff;
+}
+
+#navigation li a:hover {
+    background: #990000;
+}
+
+pre {
+    line-height: 1em;
+}
+textarea#snippet_code {
+    height: 600px;
+    width: 920px;
+}
+#snippet_language_id {
+    width: 170px;
+}
+
+h1 a, h1 a:hover {
+    text-decoration:none;
+    color:#990000;
+}
+/* NORMALIZE AND RESET - obviously inspired by Yahoo's reset.css, but scoped to just form.formtastic
+--------------------------------------------------------------------------------------------------*/
+/*form.formtastic, form.formtastic ul, form.formtastic ol, form.formtastic li, form.formtastic fieldset, form.formtastic legend, form.formtastic input, form.formtastic textarea, form.formtastic select, form.formtastic p { margin:0; padding:0; }*/
+/*form.formtastic, form.formtastic ul, form.formtastic ol, form.formtastic li, form.formtastic fieldset, form.formtastic legend, form.formtastic input, form.formtastic textarea, form.formtastic select, form.formtastic p { margin:inherit; padding:inherit; }*/
+form.formtastic { margin:inherit; padding:inherit; }
+form.formtastic ol,form.formtastic fieldset { margin:0; padding:0; border:0;}
+form.formtastic ol, form.formtastic ul { list-style:none; }
+
+
+/* FIELDSETS & LISTS
+--------------------------------------------------------------------------------------------------*/
+/* clearfixing the fieldsets *//*
+form.formtastic fieldset { display: inline-block; }
+html[xmlns] form.formtastic fieldset { display: block; }
+*/
+
+
+/* INPUT LIs
+--------------------------------------------------------------------------------------------------*/
+/*form.formtastic fieldset ol li { margin-bottom:1.5em; }*/
+
+/* clearfixing the li's *//*
+form.formtastic fieldset ol li { display: inline-block; }
+html[xmlns] form.formtastic fieldset ol li { display: block; }
+*/

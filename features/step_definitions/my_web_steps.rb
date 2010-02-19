@@ -1,5 +1,6 @@
 Then /^I should see a "([^\"]*)" field$/ do |field|
-  field_labeled(field).should_not be_nil
+#  field_labeled(field).should_not be_nil
+  fill_in(field,"")
 end
 
 Then /^I should see a "([^\"]*)" button$/ do |button_text|
