@@ -1,6 +1,11 @@
 %p
   %b< Code:
-  %pre~h @snippet.code
+  %table
+    %tr
+      %td
+        %pre.slush_poppies
+          %span.line-numbers>~ Range.new(1,@snippet.code.to_a.size).map{|line_number| line_number.to_s.rjust(4)+"&#x000A;"}
+      %td~ Uv.parse(@snippet.code, 'xhtml', @snippet.language.parser, false, 'slush_poppies')
 %p
   %b Language:
   =h @snippet.language.name

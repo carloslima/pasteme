@@ -21,6 +21,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem "formtastic", :version => '>= 0.9.7'
   config.gem "will_paginate", :version => '>= 2.3.12'
+  config.gem "ultraviolet", :lib => "uv", :version => ">= 0.10.2"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
@@ -41,3 +42,6 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
 end
+
+# Init Ultraviolet now so it doesn't delay on the first call
+Uv.init_syntaxes 

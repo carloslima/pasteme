@@ -3,14 +3,20 @@
 %table{:id=>"snippets"}
   %tr
     %th Code
-  - @snippets.each_with_index do |snippet,i|
-    %tr{:class=>"snippet", :id=>"snippet_#{i}"}
+  - @snippets.each_with_index do |snippet, index|
+    %tr{:class=>"snippet", :id=>"snippet_#{index}"}
       %td
-        %pre~h snippet.code.to_a.first(3).to_s
+        %table
+          %tr
+            %td
+              %pre.slush_poppies
+                %span.line-numbers>~ Range.new(1,snippet.code.to_a.first(3).size).map{|line_number| line_number.to_s.rjust(4)+"&#x000A;"}
+            %td~ Uv.parse(snippet.code.to_a.first(3).to_s, 'xhtml', snippet.language.parser, false, 'slush_poppies')
+
+
       %td= link_to 'Show', snippet
       %td= link_to 'Edit', edit_snippet_path(snippet)
       %td= link_to 'Destroy', snippet, :confirm => 'Are you sure?', :method => :delete
-
 %br
 
 = will_paginate @snippets

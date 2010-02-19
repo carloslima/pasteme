@@ -1,9 +1,9 @@
 Factory.define :snippet do |f|
-  f.code "<?php die('hard'); ?>"
+  f.code "quit('smoking')"
   f.association :language
   end
 
 Factory.define :language do |f|
-  f.name "Luby on Lails"
-  f.parser "xuby_on_xails" 
+  f.name "Ruby"
+  f.parser "ruby" 
 end

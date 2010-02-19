@@ -24,7 +24,8 @@ Feature: viewer sees snippet
     And I should see "Edit"
 
   Scenario: Escape HTML
-    Given a snippet exists with code: "<dummyml> &"
+    Given a language exists with parser: "plain_text"
+    And a snippet exists with code: "<dummyml> &", language: the language
     When I go to that snippet's page
     Then I should see "<dummyml> &"
     And there should be "<dummyml> &" html-escaped
