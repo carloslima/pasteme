@@ -1,11 +1,11 @@
 %h2 Snippets
 
-#snippets
+#snippets.span-24
   - @snippets.each_with_index do |snippet, index|
-    .snippet{:id => "snippet_#{index}"}
+    .span-24.snippet{:id => "snippet_#{index}"}
       .span-21= link_to 'Show', snippet
       .span-3.last.quiet #{time_ago_in_words(snippet.updated_at)} ago
-      .span-1.first
+      .span-1
         %pre.slush_poppies
           %span.line-numbers>~ snippet.preview.formatted_line_numbering
       .span-23.last
@@ -13,4 +13,4 @@
 
 %br
 
-= will_paginate @snippets
+.prepend-10= will_paginate @snippets
