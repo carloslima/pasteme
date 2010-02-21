@@ -1,0 +1,744 @@
+ruby
+class ABC
+  def efg
+    "hij"
+  end
+end
+----
+perl
+print "Hello World!"
+----
+ruby_on_rails
+# Methods added to this helper will be available to all templates in the application.
+module ApplicationHelper
+
+  # helper to determine if its appropriate to show the store menu
+  def store_menu?
+    return true unless %w{thank_you}.include? @current_action
+    false
+  end
+
+  def flag_image(code)
+    "#{code.to_s.split("-").last.downcase}.png"
+  end
+
+end
+----
+tcl
+test basic-10.1 {DeleteInterpProc, destroys interp's global namespace} {
+    catch {interp delete test_interp}
+    interp create test_interp
+    interp eval test_interp {
+        namespace eval test_ns_basic {
+            namespace export p
+            proc p {} {
+                return [namespace current]
+            }
+        }
+        namespace eval test_ns_2 {
+            namespace import ::test_ns_basic::p
+            variable v 27
+            proc q {} {
+                variable v
+                return "[p] $v"
+            }
+        }
+    }
+    list [interp eval test_interp {test_ns_2::q}] \
+         [interp eval test_interp {namespace delete ::}] \
+         [catch {interp eval test_interp {set a 123}} msg] $msg \
+         [interp delete test_interp]
+} {{::test_ns_basic 27} {} 1 {invalid command name "set"} {}}
+
+test basic-11.1 {HiddenCmdsDeleteProc, invalidate cached refs to deleted hidden cmd} {
+    catch {interp delete test_interp}
+    interp create test_interp
+    interp eval test_interp {
+        proc p {} {
+            return 27
+        }
+    }
+    interp alias {} localP test_interp p
+    list [interp eval test_interp {p}] \
+         [localP] \
+         [test_interp hide p] \
+         [catch {localP} msg] $msg \
+         [interp delete test_interp] \
+         [catch {localP} msg] $msg
+} {27 27 {} 1 {invalid command name "p"} {} 1 {invalid command name "localP"}}
+----
+perl
+sub new_repo
+{
+    my ($repo, $hooks_dir) = @_;
+
+    umask($REPO_UMASK);
+
+    system("mkdir", "-p", "$repo.git") and die "$ABRT mkdir $repo.git failed: $!\n";
+        # erm, note that's "and die" not "or die" as is normal in perl
+    wrap_chdir("$repo.git");
+    system("git --bare init >&2");
+    # propagate our own, plus any local admin-defined, hooks
+    system("cp $hooks_dir/* hooks/");
+    chmod 0755, "hooks/update";
+}
+
+----
+javascript
+function(doc) {
+  if (doc.type == "task" && doc.state != "done") {
+    var words = {};
+    doc.body.replace(/\#([\w\-\.]+)/g, function(tag, word) {
+      words[word.toLowerCase()] = true;
+    });
+    for (var w in words) {
+      emit([w, doc.created_at], doc);
+    }
+  }
+}
+----
+python
+class Progress:
+    """Track the progress of an operation and calculate the projected time to
+    its completion."""
+    def __init__(self, totalitems, timeasstring = True):
+        """Create a Progress instance. totalitems must be the total number of
+        items we intend to process, so the class knows how far we've gone."""
+        self._totalitems = totalitems
+        self._starttime = time.time()
+        self._timeasstring = timeasstring
+
+    def progress(self, itemnumber):
+        """We have progressed itemnumber items, so return our completion
+        percentage, items/total items, total time and projected total
+        time."""
+        elapsed = time.time() - self._starttime
+        # Multiply by 1.0 to force conversion to long.
+        percentcomplete = (1.0 * itemnumber) / self._totalitems
+        try:
+            total = int(elapsed / percentcomplete)
+        except ZeroDivisionError:
+            total = 0
+        if self._timeasstring:
+            return ({"elapsed_time": timetostr(elapsed),
+                    "total_time": timetostr(total),
+                    "percentage": int(percentcomplete * 100),
+                    "item": itemnumber,
+                    "items": self._totalitems})
+        else:
+            return ({"elapsed_time": int(elapsed),
+                    "total_time": int(total),
+                    "percentage": int(percentcomplete * 100),
+                    "item": itemnumber,
+                    "items": self._totalitems})
+
+    def progressstring(self, itemnumber):
+        """Return a string detailing the current progress."""
+        timings = self.progress(itemnumber)
+        if itemnumber == self._totalitems:
+            return "Done in %s, processed %s items.        \n" % (timings[0], timings[4])
+        else:
+            return "Progress: %s/%s, %s%%, %s/%s items.\r" % timings
+
+----
+ruby
+class Hardware
+  # These methods use info spewed out by sysctl.
+  # Look in <mach/machine.h> for decoding info.
+
+  def self.cpu_type
+    @@cpu_type ||= `/usr/sbin/sysctl -n hw.cputype`.to_i
+
+    case @@cpu_type
+    when 7
+      :intel
+    when 18
+      :ppc
+    else
+      :dunno
+    end
+  end
+
+  def self.intel_family
+    @@intel_family ||= `/usr/sbin/sysctl -n hw.cpufamily`.to_i
+
+    case @@intel_family
+    when 0x73d67300 # Yonah: Core Solo/Duo
+      :core
+    when 0x426f69ef # Merom: Core 2 Duo
+      :core2
+    when 0x78ea4fbc # Penryn
+      :penryn
+    when 0x6b5a4cd2 # Nehalem
+      :nehalem
+    else
+      :dunno
+    end
+  end
+
+  def self.processor_count
+    @@processor_count ||= `/usr/sbin/sysctl -n hw.ncpu`.to_i
+  end
+
+  def self.cores_as_words
+    case Hardware.processor_count
+    when 1 then 'single'
+    when 2 then 'dual'
+    when 4 then 'quad'
+    else
+      Hardware.processor_count
+    end
+  end
+
+  def self.is_64_bit?
+    self.sysctl_bool("hw.cpu64bit_capable")
+  end
+
+  def self.bits
+    Hardware.is_64_bit? ? 64 : 32
+  end
+
+protected
+  def self.sysctl_bool(property)
+    result = nil
+    IO.popen("/usr/sbin/sysctl -n #{property} 2>/dev/null") do |f|
+      result = f.gets.to_i # should be 0 or 1
+    end
+    $?.success? && result == 1 # sysctl call succeded and printed 1
+  end
+end
+----
+c
+#ifdef _WIN32
+#include <windows.h>
+#else
+#define SetConsoleTitle(t)
+#endif
+
+/* Ctrl-C handler */
+static int     b_ctrl_c = 0;
+static int     b_exit_on_ctrl_c = 0;
+static void    SigIntHandler( int a )
+{
+    if( b_exit_on_ctrl_c )
+        exit(0);
+    b_ctrl_c = 1;
+}
+
+typedef struct {
+    int b_progress;
+    int i_seek;
+    hnd_t hin;
+    hnd_t hout;
+    FILE *qpfile;
+} cli_opt_t;
+
+/* i/o file operation function pointer structs */
+cli_input_t input;
+static cli_output_t output;
+
+static const char * const demuxer_names[] =
+{
+    "auto",
+    "yuv",
+    "y4m",
+#ifdef AVS_INPUT
+    "avs",
+#endif
+#ifdef LAVF_INPUT
+    "lavf",
+#endif
+#ifdef FFMS_INPUT
+    "ffms",
+#endif
+    0
+};
+
+
+static const char * const muxer_names[] =
+{
+    "auto",
+    "raw",
+    "mkv",
+    "flv",
+#ifdef MP4_OUTPUT
+    "mp4",
+#endif
+    0
+};
+
+static void Help( x264_param_t *defaults, int longhelp );
+static int  Parse( int argc, char **argv, x264_param_t *param, cli_opt_t *opt );
+static int  Encode( x264_param_t *param, cli_opt_t *opt );
+
+/****************************************************************************
+ * main:
+ ****************************************************************************/
+int main( int argc, char **argv )
+{
+    x264_param_t param;
+    cli_opt_t opt;
+    int ret;
+
+#ifdef PTW32_STATIC_LIB
+    pthread_win32_process_attach_np();
+    pthread_win32_thread_attach_np();
+#endif
+
+#ifdef _WIN32
+    _setmode(_fileno(stdin), _O_BINARY);
+    _setmode(_fileno(stdout), _O_BINARY);
+#endif
+
+    x264_param_default( &param );
+
+    /* Parse command line */
+    if( Parse( argc, argv, &param, &opt ) < 0 )
+        return -1;
+
+    /* Control-C handler */
+    signal( SIGINT, SigIntHandler );
+
+    ret = Encode( &param, &opt );
+
+#ifdef PTW32_STATIC_LIB
+    pthread_win32_thread_detach_np();
+    pthread_win32_process_detach_np();
+#endif
+
+    return ret;
+}
+----
+c++
+using namespace mongo;
+
+int main(int argc, char* argv[], char *envp[] ) {
+
+    bool justTests = false;
+    vector<string> configdbs;
+
+    for (int i = 1; i < argc; i++)  {
+        if ( argv[i] == 0 ) continue;
+        string s = argv[i];
+        if ( s == "--port" ) {
+            cmdLine.port = atoi(argv[++i]);
+        }
+        else if ( s == "--configdb" ) {
+
+            while ( ++i < argc )
+                configdbs.push_back(argv[i]);
+
+            if ( configdbs.size() == 0 ) {
+                out() << "error: no args for --configdb\n";
+                return 4;
+            }
+
+            if ( configdbs.size() > 2 ) {
+                out() << "error: --configdb does not support more than 2 parameters yet\n";
+                return 5;
+            }
+        }
+        else if ( s.find( "-v" ) == 0 ){
+            logLevel = s.size() - 1;
+        }
+        else if ( s == "--test" ) {
+            justTests = true;
+            logLevel = 5;
+        }
+        else {
+            usage( argv );
+            return 3;
+        }
+    }
+
+    if ( justTests ){
+        UnitTest::runTests();
+        cout << "tests passed" << endl;
+        return 0;
+    }
+
+    pool.addHook( &shardingConnectionHook );
+
+    if ( argc <= 1 ) {
+        usage( argv );
+        return 3;
+    }
+
+    bool ok = cmdLine.port != 0 && configdbs.size();
+
+    if ( !ok ) {
+        usage( argv );
+        return 1;
+    }
+
+    log() << argv[0] << " v0.3- (alpha 3t) starting (--help for usage)" << endl;
+    printGitVersion();
+    printSysInfo();
+
+    if ( ! configServer.init( configdbs ) ){
+        cout << "couldn't connectd to config db" << endl;
+        return 7;
+    }
+
+    assert( configServer.ok() );
+
+    int configError = configServer.checkConfigVersion();
+    if ( configError ){
+        cout << "config server error: " << configError << endl;
+        return configError;
+    }
+    configServer.reloadSettings();
+
+    init();
+    start();
+    dbexit( EXIT_CLEAN );
+    return 0;
+}
+
+#undef exit
+void mongo::dbexit( ExitCode rc, const char *why) {
+    dbexitCalled = true;
+    log() << "dbexit: " << why << " rc:" << rc << endl;
+    ::exit(rc);
+}
+----
+objective-c
+#import "Three20/UIWindowAdditions.h"
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Additions.
+ */
+@implementation UITableView (TTCategory)
+
+- (UIView*)indexView {
+  Class indexViewClass = NSClassFromString(@"UITableViewIndex");
+  NSEnumerator* e = [self.subviews reverseObjectEnumerator];
+  for (UIView* child; child = [e nextObject]; ) {
+    if ([child isKindOfClass:indexViewClass]) {
+      return child;
+    }
+  }
+  return nil;
+}
+
+- (CGFloat)tableCellMargin {
+  if (self.style == UITableViewStyleGrouped) {
+    return 10;
+  } else {
+    return 0;
+  }
+}
+
+- (void)scrollToTop:(BOOL)animated {
+  [self setContentOffset:CGPointMake(0,0) animated:animated];
+}
+
+- (void)scrollToBottom:(BOOL)animated {
+  NSUInteger sectionCount = [self numberOfSections];
+  if (sectionCount) {
+    NSUInteger rowCount = [self numberOfRowsInSection:0];
+    if (rowCount) {
+      NSUInteger ii[2] = {0, rowCount-1};
+      NSIndexPath* indexPath = [NSIndexPath indexPathWithIndexes:ii length:2];
+      [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom
+        animated:animated];
+    }
+  }
+}
+
+- (void)scrollToFirstRow:(BOOL)animated {
+  if ([self numberOfSections] > 0 && [self numberOfRowsInSection:0] > 0) {
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop
+          animated:NO];
+  }
+}
+
+- (void)scrollToLastRow:(BOOL)animated {
+  if ([self numberOfSections] > 0) {
+    NSInteger section = [self numberOfSections]-1;
+    NSInteger rowCount = [self numberOfRowsInSection:section];
+    if (rowCount > 0) {
+      NSIndexPath* indexPath = [NSIndexPath indexPathForRow:rowCount-1 inSection:section];
+      [self scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
+  }
+}
+
+- (void)scrollFirstResponderIntoView {
+  UIView* responder = [self.window findFirstResponder];
+  UITableViewCell* cell = (UITableViewCell*)[responder ancestorOrSelfWithClass:[UITableViewCell class]];
+  if (cell) {
+    NSIndexPath* indexPath = [self indexPathForCell:cell];
+    if (indexPath) {
+      [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle
+            animated:YES];
+    }
+  }
+}
+
+- (void)touchRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated {
+  if (![self cellForRowAtIndexPath:indexPath]) {
+    [self reloadData];
+  }
+
+  if ([self.delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
+    [self.delegate tableView:self willSelectRowAtIndexPath:indexPath];
+  }
+
+  [self selectRowAtIndexPath:indexPath animated:animated
+    scrollPosition:UITableViewScrollPositionTop];
+
+  if ([self.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+    [self.delegate tableView:self didSelectRowAtIndexPath:indexPath];
+  }
+}
+
+@end
+----
+lisp
+;;; It should be noted that solution 1 and 3 are especially slow as they
+;;; attempt to compose a predicate as some sort of "pure functions", the
+;;; ones building the predicate out a local function binding are roughly 3
+;;; times faster.
+(in-package :nisp.euler)
+
+(defun sum-integers (start end &key (test #'integerp) (step 1))
+  "Sum numbers satisfying PREDICATE from START to END."
+  (declare (optimize (safety 0) (debug 0) (speed 3) (space 0))
+           (type fixnum start end step))
+  (iterate (for n :from start :to end :by step)
+           (when (funcall test n)
+             (sum n :into result))
+           (declare (type integer result))
+           (finally (return result))))
+
+(defun solution-1/1 ()
+  "Call `sum-integers-if' after we compose predicate.
+
+This is a purely functional way of solving this problem."
+  (sum-integers 0 999 :test (disjoin (compose (curry #'= 0) (rcurry #'mod 3))
+                            (compose (curry #'= 0) (rcurry #'mod 5)))))
+
+(defun solution-1/2 ()
+  "Use a local function definition for the predicate."
+  (flet ((validp (n)
+           (or (= 0 (mod n 3)) (= 0 (mod n 5)))))
+    (sum-integers 0 999 :test #'validp)))
+
+(defun sum-integers-recursive
+    (current end &key (total 0) (step 1) (test #'integerp))
+  "Sum numbers satisfying TEST from CURRENT to END."
+  (declare (optimize (safety 0) (debug 0) (speed 3) (space 0)
+                     (compilation-speed 0))
+           (type fixnum current end step)
+           (type integer total)
+           (type function test))
+  (if (<= current end)
+      (sum-integers-recursive (the fixnum (1+ current)) end :step step :test test
+                     :total (if (funcall test current)
+                                (the integer (+ total current))
+                                total))
+      total))
+
+(defun solution-1/3 ()
+  "recursive form"
+  (sum-integers-recursive
+   0 999
+   :test (disjoin (compose (curry #'= 0) (rcurry #'mod 3))
+                  (compose (curry #'= 0) (rcurry #'mod 5)))))
+
+(defun solution-1/4 ()
+  "recursive form with local function def"
+  (flet ((validp (n)
+           (or (= 0 (mod n 3)) (= 0 (mod n 5)))))
+    (sum-integers-recursive 0 999 :test #'validp)))
+
+
+(defun last-integer-before (number divisor)
+  (- number (mod number divisor)))
+
+(defun number-of-terms (last step)
+  (the integer (/ (last-integer-before last step) step)))
+
+(defun arithmetic-progression2 (start end step)
+  (* (/ (number-of-terms (last-integer-before end step) step) 2)
+     (+ start (last-integer-before end step))))
+
+(defun solution-1/5 ()
+  "This is probably the fastest as there is no loop happening to do this."
+  (- (+ (arithmetic-progression2 3 1000 3)
+        (arithmetic-progression2 5 999 5))
+     (arithmetic-progression2 15 999 15)))
+----
+fortran
+      SUBROUTINE BODIES
+*
+*
+*       Output of single bodies or binaries.
+*
+      INCLUDE 'common6.h'
+      REAL*8  A(3)
+*
+*
+*       Check option for printing single bodies.
+      IF (KZ(9).EQ.0) GO TO 20
+      K = KZ(9)
+      IBODY = MIN(5**K,NTOT)
+*
+      DO 10 I = 1,IBODY
+          FIRR = SQRT(FI(1,I)**2 + FI(2,I)**2 + FI(3,I)**2)
+          FREG = SQRT(FR(1,I)**2 + FR(2,I)**2 + FR(3,I)**2)
+          EI = 0.5*(XDOT(1,I)**2 + XDOT(2,I)**2 + XDOT(3,I)**2)
+          DO 4 J = 1,N
+              IF (J.EQ.I) GO TO 4
+              IF (I.GT.N.AND.J.LT.IFIRST) GO TO 4
+              RIJ2 = (X(1,I) - X(1,J))**2 + (X(2,I) - X(2,J))**2 +
+     &                                      (X(3,I) - X(3,J))**2
+              EI = EI - BODY(J)/SQRT(RIJ2)
+    4     CONTINUE
+          IF (KZ(14).GT.0) THEN
+              CALL XTRNLV(I,I)
+              EI = EI + HT
+          END IF
+          DO 5 K = 1,3
+              A(K) = X(K,I) - RDENS(K)
+    5     CONTINUE
+          RI = SQRT(A(1)**2 + A(2)**2 + A(3)**2)
+          WRITE (6,6)  I, NAME(I), BODY(I), STEP(I), STEPR(I), EI, RI,
+     &                 LIST(1,I), (A(K),K=1,3), (XDOT(K,I),K=1,3), FIRR,
+     &                 FREG, RS(I)
+    6     FORMAT (I6,I5,2F8.4,F7.3,F7.1,F7.2,I6,3X,3F7.2,3X,3F6.2,3X,
+     &                                                   F7.1,F6.1,F7.2)
+   10 CONTINUE
+*
+*       Optional search for soft binaries (frequency NFIX with KZ(6) = 4).
+   20 IF (KZ(6).EQ.0) GO TO 70
+      IF (KZ(6).EQ.2) GO TO 50
+      IF (KZ(6).EQ.4.AND.NPRINT.NE.1) GO TO 50
+      SIMAX = 0.01*TCR
+*
+      DO 40 I = IFIRST,NTOT
+          IF (STEP(I).GT.SIMAX) GO TO 40
+          JMIN = 0
+          RJMIN2 = RSCALE**2
+          NNB = LIST(1,I)
+          DO 30 L = 1,NNB
+              J = LIST(L+1,I)
+              IF (STEP(J).GT.SIMAX) GO TO 30
+              A1 = X(1,I) - X(1,J)
+              A2 = X(2,I) - X(2,J)
+              A3 = X(3,I) - X(3,J)
+              RIJ2 = A1**2 + A2**2 + A3**2
+              IF (RIJ2.LT.RJMIN2) THEN
+                  RJMIN2 = RIJ2
+                  JMIN = J
+              END IF
+   30     CONTINUE
+          IF (JMIN.LE.I) GO TO 40
+          RIJMIN = SQRT(RJMIN2)
+          VR2 = (XDOT(1,I) - XDOT(1,JMIN))**2 +
+     &          (XDOT(2,I) - XDOT(2,JMIN))**2 +
+     &          (XDOT(3,I) - XDOT(3,JMIN))**2
+          EREL = 0.5*VR2 - (BODY(I) + BODY(JMIN))/RIJMIN
+*       Only print significant binaries.
+          IF (EREL.GT.-0.1*ECLOSE) GO TO 40
+          SEMI = -0.5*(BODY(I) + BODY(JMIN))/EREL
+          ZN = SQRT((BODY(I) + BODY(JMIN))/SEMI**3)
+          RDOT = (X(1,I) - X(1,JMIN))*(XDOT(1,I) - XDOT(1,JMIN)) +
+     &           (X(2,I) - X(2,JMIN))*(XDOT(2,I) - XDOT(2,JMIN)) +
+     &           (X(3,I) - X(3,JMIN))*(XDOT(3,I) - XDOT(3,JMIN))
+          ECC2 = (1.0 - RIJMIN/SEMI)**2 +
+     &                             RDOT**2/(SEMI*(BODY(I) + BODY(JMIN)))
+          ECC = SQRT(ECC2)
+          RI = SQRT((X(1,I) - RDENS(1))**2 + (X(2,I) - RDENS(2))**2 +
+     &                                       (X(3,I) - RDENS(3))**2)
+          WRITE (6,35)  NAME(I), NAME(JMIN), BODY(I), BODY(JMIN), EREL,
+     &                  SEMI, ZN, RIJMIN, RI, ECC, LIST(1,I)
+   35     FORMAT ('   BINARY ',2I5,2F8.4,F9.1,1P,4E10.2,0P,F7.2,2I5,
+     &                                              1P,E10.1,0P,F7.2,I4)
+   40 CONTINUE
+*
+*       Output of regularized binaries (frequency NFIX with KZ(6) = 4).
+   50 DO 60 JPAIR = 1,NPAIRS
+          IF (H(JPAIR).GE.0.0) GO TO 60
+          I = 2*JPAIR - 1
+          ICM = N + JPAIR
+          JMIN = I + 1
+          IF (BODY(I).LE.0.0D0) GO TO 60
+          SEMI = -0.5*(BODY(I) + BODY(JMIN))/H(JPAIR)
+          ZN = SQRT((BODY(I) + BODY(JMIN))/SEMI**3)
+          RP = U(1,JPAIR)**2 + U(2,JPAIR)**2 + U(3,JPAIR)**2 +
+     &                                         U(4,JPAIR)**2
+          ECC2 = (1.0 - RP/SEMI)**2 +
+     &                     TDOT2(JPAIR)**2/(SEMI*(BODY(I) + BODY(JMIN)))
+          ECC = SQRT(ECC2)
+          RI = SQRT((X(1,ICM) - RDENS(1))**2 +
+     &              (X(2,ICM) - RDENS(2))**2 +
+     &              (X(3,ICM) - RDENS(3))**2)
+          VI = SQRT(XDOT(1,ICM)**2 + XDOT(2,ICM)**2 + XDOT(3,ICM)**2)
+          WRITE (6,35)  NAME(I), NAME(JMIN), BODY(I), BODY(JMIN),
+     &                  H(JPAIR), SEMI, ZN, RP, RI, ECC, LIST(1,I),
+     &                  LIST(1,N+JPAIR), GAMMA(JPAIR), VI, KSLOW(JPAIR)
+   60 CONTINUE
+*
+   70 RETURN
+*
+      END
+----
+java
+public class MonitorModule extends AbstractModule {
+
+    public static final class MonitorSettings {
+        public static final String MEMORY_MANAGER_TYPE = "monitor.memory.type";
+    }
+
+    private final Settings settings;
+
+    public MonitorModule(Settings settings) {
+        this.settings = settings;
+    }
+
+    @Override protected void configure() {
+        bind(MemoryMonitor.class)
+                .to(settings.getAsClass(MonitorSettings.MEMORY_MANAGER_TYPE, AlphaMemoryMonitor.class, "org.elasticsearch.monitor.memory.", "MemoryMonitor"))
+                .asEagerSingleton();
+        bind(MemoryMonitorService.class).asEagerSingleton();
+
+        bind(JvmMonitorService.class).asEagerSingleton();
+
+        MapBinder<String, DumpContributorFactory> tokenFilterBinder
+                = MapBinder.newMapBinder(binder(), String.class, DumpContributorFactory.class);
+
+        Map<String, Settings> dumpContSettings = settings.getGroups("monitor.dump");
+        for (Map.Entry<String, Settings> entry : dumpContSettings.entrySet()) {
+            String dumpContributorName = entry.getKey();
+            Settings dumpContributorSettings = entry.getValue();
+
+            Class<? extends DumpContributorFactory> type = dumpContributorSettings.getAsClass("type", null, "org.elasticsearch.monitor.dump." + dumpContributorName + ".", "DumpContributor");
+            if (type == null) {
+                throw new IllegalArgumentException("Dump Contributor [" + dumpContributorName + "] must have a type associated with it");
+            }
+            tokenFilterBinder.addBinding(dumpContributorName).toProvider(FactoryProvider.newFactory(DumpContributorFactory.class, type)).in(Scopes.SINGLETON);
+        }
+        // add default
+        if (!dumpContSettings.containsKey(SUMMARY)) {
+            tokenFilterBinder.addBinding(SUMMARY).toProvider(FactoryProvider.newFactory(DumpContributorFactory.class, SummaryDumpContributor.class)).in(Scopes.SINGLETON);
+        }
+        if (!dumpContSettings.containsKey(THREAD_DUMP)) {
+            tokenFilterBinder.addBinding(THREAD_DUMP).toProvider(FactoryProvider.newFactory(DumpContributorFactory.class, ThreadDumpContributor.class)).in(Scopes.SINGLETON);
+        }
+        if (!dumpContSettings.containsKey(HEAP_DUMP)) {
+            tokenFilterBinder.addBinding(HEAP_DUMP).toProvider(FactoryProvider.newFactory(DumpContributorFactory.class, HeapDumpContributor.class)).in(Scopes.SINGLETON);
+        }
+        if (!dumpContSettings.containsKey(CLUSTER)) {
+            tokenFilterBinder.addBinding(CLUSTER).toProvider(FactoryProvider.newFactory(DumpContributorFactory.class, ClusterDumpContributor.class)).in(Scopes.SINGLETON);
+        }
+
+
+        bind(DumpMonitorService.class).asEagerSingleton();
+    }
+}
