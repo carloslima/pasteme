@@ -23,6 +23,11 @@ class SnippetsController < ApplicationController
     end
   end
 
+  def fullscreen
+    @snippet = Snippet.find(params[:id])
+    render :layout => false
+  end
+
   # GET /snippets/new
   # GET /snippets/new.xml
   def new

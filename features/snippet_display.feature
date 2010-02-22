@@ -96,3 +96,15 @@ Feature: Display snippets with nice formatting
     unindented  2s
         4spaces
     """
+
+  Scenario: Fullscreen view with syntax coloring
+    Given a snippet exists with code: "def greet(param)\n  'hello, world!'.capitalize\nend", language: language "Ruby"
+    When I go to that snippet fullscreen page
+    Then I should see the snippet syntax-colored properly in "Ruby"
+    And I should see "1"
+    And I should see "2"
+    And I should see "3"
+    And I should not see "Browse"
+    And I should not see "New"
+    And I should not see "Edit"
+    And I should not see "PasteMe"
