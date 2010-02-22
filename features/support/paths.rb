@@ -14,7 +14,9 @@ module NavigationHelpers
     when /newly created #{capture_model}(?:'s)? page/
       model_name = $1.split.map{|i| i.capitalize}.join
       polymorphic_path( model_name.constantize.last )
-    
+
+    when /^#{capture_model}(?:'s)? (.+?) format page$/
+      polymorphic_path(model($1), :format => $2)
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

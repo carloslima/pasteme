@@ -18,6 +18,8 @@ class SnippetsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @snippet }
+      format.text { render :text => @snippet.code }
+      format.json { render :json => @snippet.to_json }
     end
   end
 

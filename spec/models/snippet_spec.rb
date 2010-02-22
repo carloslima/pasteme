@@ -26,4 +26,14 @@ describe Snippet do
     Factory.build(:snippet, :code=>"first"+"\n"*30+"last").preview.code.to_a.last.should_not be_empty
   end
 
+  describe "#to_json" do
+    it "should only have id,code,updated_at and language.name attributes" do
+      lang = Factory(:language,:id=>3434,:name=>'langname',:parser=>'langparser')
+      snip = Factory(:snippet, :id=>2323, :code=>"snipcode", :language=>lang)
+      json = snip.to_json
+      json.should_not include("created_at","language_id","langparser","3434")
+      json.should include("2323","snipcode", "langname","updated_at")
+    end
+  end
+
 end

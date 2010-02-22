@@ -18,3 +18,10 @@ end
 Given /^#{capture_model} exists with "([^\"]*)":$/ do |model_name, field_name, field_value|
   create_model(model_name, {field_name => field_value})
 end
+
+Then /^the response should be exactly "([^\"]*)"$/ do |text|
+  response.body.should == text
+end
+Then /^the response should be exactly:$/ do |text|
+  Then %{the response should be exactly "#{text}"}
+end

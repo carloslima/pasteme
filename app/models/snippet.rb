@@ -21,6 +21,11 @@ class Snippet < ActiveRecord::Base
     @preview
   end
 
+  def to_json(options = nil)
+    options ||= {:only=>[:id,:code,:updated_at], :include => {:language => {:only => :name }}}
+    super(options)
+  end
+
   private
 
   # <pre> blocks wont show the last line if it's empty, making the
