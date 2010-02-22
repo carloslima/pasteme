@@ -4,7 +4,7 @@ class SnippetsController < ApplicationController
 
   # GET /snippets
   def index
-    @snippets = Snippet.paginate :per_page => 10, :page => params[:page], :order=> 'updated_at DESC'
+    @snippets = Snippet.paginate :page => params[:page], :order=> 'updated_at DESC'
 
     respond_to do |format|
       format.html # index.html.erb

@@ -5,8 +5,13 @@ class Snippet < ActiveRecord::Base
   validates_associated :language
   validates_presence_of :code
 
+  @@no_line_numbers = false
+  @@defaut_theme = 'slush_poppies'
+  @@per_page = 10
+  cattr_reader :per_page
+
   def formatted_code
-    Uv.parse(code_with_trailing_space, 'xhtml', language.parser, false, 'slush_poppies')
+    Uv.parse(code_with_trailing_space, 'xhtml', language.parser, @@no_line_numbers, @@defaut_theme)
   end
 
   def formatted_line_numbering
