@@ -1,22 +1,22 @@
 !!!
 %html{"xmlns"=>"http://www.w3.org/1999/xhtml", "xml:lang"=>"en", "lang"=>"en"}
-%head
-  %meta{"http-equiv"=>"content-type", "content"=>"text/html;charset=UTF-8"}
-  %title #{controller.controller_name}: #{controller.action_name}
-  = stylesheet_link_tag 'blueprint/screen.css'
-  = stylesheet_link_tag 'application'
-  =# stylesheet_link_tag 'scaffold'
-  =# stylesheet_link_tag 'formtastic', 'formtastic_changes'
-  = stylesheet_link_tag 'themes/slush_poppies'
-%body
-  .container
-    .span-4
-      %h1= link_to "PasteMe", root_path
-    #navigation.span-20.last
-      %ul
-        %li= link_to "Browse", snippets_path
-        %li= link_to "New", new_snippet_path
-    #content.span-24.last
-      - if flash[:notice]
-        #flash.success= flash[:notice]
-      = yield
+  %head
+    %meta{"http-equiv"=>"content-type", "content"=>"text/html;charset=UTF-8"}
+    %title #{controller.controller_name}: #{controller.action_name}
+    = stylesheet_link_tag 'blueprint/screen.css'
+    = stylesheet_link_tag 'application'
+    =# stylesheet_link_tag 'scaffold'
+    =# stylesheet_link_tag 'formtastic', 'formtastic_changes'
+    = stylesheet_link_tag 'themes/slush_poppies'
+  %body
+    .container
+      .span-4
+        %h1= link_to "PasteMe", root_path
+      #navigation.span-20.last
+        %ul
+          %li= link_to "Browse", snippets_path
+          %li= link_to "New", new_snippet_path
+      #content.span-24.last
+        - if flash[:notice]
+          #flash.success= flash[:notice]
+        = yield
