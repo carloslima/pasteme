@@ -1,4 +1,7 @@
 class SnippetsController < ApplicationController
+  before_filter :check_authorization, :only=>[:edit,:update,:destroy]
+  helper_method :can_edit?
+
   # GET /snippets
   # GET /snippets.xml
   def index
@@ -51,6 +54,7 @@ class SnippetsController < ApplicationController
 
     respond_to do |format|
       if @snippet.save
+        owns!(@snippet.id)
         flash[:notice] = 'Snippet was successfully created.'
         format.html { redirect_to(@snippet) }
         format.xml  { render :xml => @snippet, :status => :created, :location => @snippet }
@@ -87,6 +91,30 @@ class SnippetsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(snippets_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  private
+  # We use a simple approach to "authorization"
+  # The session that created the snippet can edit/delete it
+  # while the session is valid.
+  # This should be good enough for small corrections
+
+  def owns! snippet_id
+    session[:owns] ||= []
+    session[:owns] << snippet_id.to_i
+  end
+  def owns? snippet_id
+    session[:owns] ||= []
+    session[:owns].include? snippet_id.to_i
+  end
+  def can_edit?
+    owns?(params[:id])
+  end
+  def check_authorization
+    unless can_edit?
+      flash[:error] = "Sorry, you can't do that!"
+      redirect_to(:action=>:show)
     end
   end
 end

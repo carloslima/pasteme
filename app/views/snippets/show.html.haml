@@ -12,7 +12,8 @@
 =link_to "Raw", snippet_path(@snippet, :format=>:text)
 |
 =link_to "JSON", snippet_path(@snippet, :format=>:json)
-|
-= link_to 'Edit', edit_snippet_path(@snippet)
-|
-= link_to 'Destroy', @snippet, :confirm => 'Are you sure?', :method => :delete
+- if can_edit?
+  |
+  = link_to 'Edit', edit_snippet_path(@snippet)
+  |
+  = link_to 'Destroy', @snippet, :confirm => 'Are you sure?', :method => :delete

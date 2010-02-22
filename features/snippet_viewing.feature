@@ -21,9 +21,8 @@ Feature: viewer sees snippet
       filter_parameter_logging :password
     end
     """
-    And I should see "Edit"
 
-  Scenario: Escape HTML
+  Scenario: Escaped HTML
     Given a language exists with parser: "plain_text"
     And a snippet exists with code: "<dummyml> &", language: the language
     When I go to that snippet's page

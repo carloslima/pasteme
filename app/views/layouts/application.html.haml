@@ -19,4 +19,6 @@
       #content.span-24.last
         - if flash[:notice]
           #flash.success= flash[:notice]
+        - if flash[:error]
+          #flash.error= flash[:error]
         = yield

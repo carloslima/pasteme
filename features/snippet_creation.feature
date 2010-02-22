@@ -39,5 +39,3 @@ Feature: developer creates snippet
 
     <%= list.reject{|x| x < 10 }.map{|x| x + 5 }.join(' -> ') %>
     """
-    
-
