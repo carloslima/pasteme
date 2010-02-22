@@ -65,3 +65,37 @@ html[xmlns] form.formtastic fieldset { display: block; }
 form.formtastic fieldset ol li { display: inline-block; }
 html[xmlns] form.formtastic fieldset ol li { display: block; }
 */
+
+.digg_pagination {
+  background: white;
+  /* self-clearing method: */ }
+  .digg_pagination a, .digg_pagination span {
+    padding: .2em .5em;
+    display: block;
+    float: left;
+    margin-right: 1px; }
+  .digg_pagination span.disabled {
+    color: #999;
+    border: 1px solid #DDD; }
+  .digg_pagination span.current {
+    font-weight: bold;
+    background: black;
+    color: white;
+    border: 1px solid black; }
+  .digg_pagination a {
+    text-decoration: none;
+    color: black;
+    border: 1px solid black; }
+    .digg_pagination a:hover, .digg_pagination a:focus {
+      color: #990000;
+      border-color: #990000; }
+  .digg_pagination:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  * html .digg_pagination {
+    height: 1%; }
+  *:first-child+html .digg_pagination {
+    overflow: hidden; }
